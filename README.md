@@ -9,3 +9,4 @@ So far, I've got covered the following patterns:
 * Strategy
 * Observer
 * Decorator
+* Factory
