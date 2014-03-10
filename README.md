@@ -10,3 +10,5 @@ So far, I've got covered the following patterns:
 * Observer
 * Decorator
 * Factory
+* Singleton
+* Command
