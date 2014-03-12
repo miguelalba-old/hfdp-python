@@ -12,3 +12,5 @@ So far, I've got covered the following patterns:
 * Factory
 * Singleton
 * Command
+* Adapter
+* Facade
