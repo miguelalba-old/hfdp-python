@@ -14,3 +14,4 @@ So far, I've got covered the following patterns:
 * Command
 * Adapter
 * Facade
+* Template method
