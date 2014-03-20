@@ -15,3 +15,4 @@ So far, I've got covered the following patterns:
 * Adapter
 * Facade
 * Template method
+* Status pattern
