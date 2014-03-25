@@ -1,5 +1,16 @@
+"""
+Starbuzz coffee
+
+Author: m1ge7
+Date: 2014/03/25
+"""
+
 from abc import ABCMeta, abstractmethod
 
+
+###############################################################################
+# Beverages
+###############################################################################
 
 class Beverage:
     __metaclass__ = ABCMeta
@@ -13,23 +24,6 @@ class Beverage:
     @abstractmethod
     def cost(self):
         pass
-
-
-class CondimentDecorator(Beverage):
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def get_description(self):
-        pass
-
-
-class Espresso(Beverage):
-
-    def __init__(self):
-        self._description = "Espresso"
-
-    def cost(self):
-        return 1.99
 
 
 class HouseBlend(Beverage):
@@ -50,6 +44,15 @@ class DarkRoast(Beverage):
         return .99
 
 
+class Espresso(Beverage):
+
+    def __init__(self):
+        self._description = "Espresso"
+
+    def cost(self):
+        return 1.99
+
+
 class Decaf(Beverage):
 
     def __init__(self):
@@ -59,16 +62,16 @@ class Decaf(Beverage):
         return 1.05
 
 
-class Mocha(CondimentDecorator):
+###############################################################################
+# Condiment decorators
+###############################################################################
 
-    def __init__(self, beverage):
-        self._beverage = beverage
+class CondimentDecorator(Beverage):
+    __metaclass__ = ABCMeta
 
+    @abstractmethod
     def get_description(self):
-        return self._beverage.get_description() + ", Mocha"
-
-    def cost(self):
-        return .20 + self._beverage.cost()
+        pass
 
 
 class Milk(CondimentDecorator):
@@ -81,6 +84,18 @@ class Milk(CondimentDecorator):
 
     def cost(self):
         return .10 + self._beverage.cost()
+
+
+class Mocha(CondimentDecorator):
+
+    def __init__(self, beverage):
+        self._beverage = beverage
+
+    def get_description(self):
+        return self._beverage.get_description() + ", Mocha"
+
+    def cost(self):
+        return .20 + self._beverage.cost()
 
 
 class Soy(CondimentDecorator):
@@ -106,6 +121,10 @@ class Whip(CondimentDecorator):
     def cost(self):
         return .10 + self._beverage.cost()
 
+
+###############################################################################
+# Simulation
+###############################################################################
 
 if __name__ == '__main__':
     beverage = Espresso()
