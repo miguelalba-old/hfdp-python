@@ -1,3 +1,10 @@
+"""
+Party
+
+Author: m1ge7
+Date: 2014/03/28
+"""
+
 from abc import ABCMeta, abstractmethod
 
 
