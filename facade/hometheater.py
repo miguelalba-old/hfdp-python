@@ -1,3 +1,9 @@
+"""
+Home Theater facade
+
+Author: m1ge7
+Date: 2014/03/29
+"""
 
 class Amplifier:
 
@@ -5,7 +11,7 @@ class Amplifier:
         self._description = description
         self._tuner = None
         self._dvd_player = None
-        self._cp_player = None
+        self._cd_player = None
 
     def on(self):
         print self._description + " on"
@@ -32,7 +38,7 @@ class Amplifier:
         self._dvd_player = dvd
 
     def set_cd(self, cd):
-        print self._description + " setting CD player to " + self._cd_player
+        print self._description + " setting CD player to " + cd
         self._cd_player = cd
 
     def __str__(self):
@@ -57,17 +63,17 @@ class CdPlayer:
         self._title = None
         print self._description + " eject"
 
-    def play(self, title):
+    def play_title(self, title):
         self._title = title
         self._current_track = 0
         print self._description + ' playing "' + self._title + '"'
 
-    def play(self, track):
+    def play_track(self, track):
         if self._title is None:
             print(self._description + " can't play track " +
                   self._current_track + ", no cd inserted")
         else:
-            self._current_track
+            self._current_track = track
             print self._description + " playing track " + self._current_track
 
     def stop(self):
@@ -155,7 +161,7 @@ class HomeTheatherFacade:
         self._projector.wide_screen_mode()
 
         self._amp.on()
-        self._amp.set_dvd(dvd)
+        self._amp.set_dvd(self._dvd)
         self._amp.set_surround_sound()
         self._amp.set_volume(5)
 
@@ -187,7 +193,7 @@ class HomeTheatherFacade:
     def end_cd(self):
         print "Shutting down CD..."
         self._amp.off()
-        self._amp.set_cd(cd)
+        self._amp.set_cd(self._cd)
         self._cd.eject()
         self._cd.off()
 
@@ -228,7 +234,7 @@ class Projector:
 
     def __init__(self, description, dvd_player):
         self._description = description
-        self._dvd_player = dvd
+        self._dvd_player = dvd_player
 
     def on(self):
         print self._description + " on"
@@ -284,6 +290,7 @@ class Tuner:
     def __init__(self, description, amplifier):
         self._description = description
         self._frequency = None
+        self._amplifier = amplifier
 
     def on(self):
         print self._description + " on"
@@ -307,17 +314,17 @@ class Tuner:
 
 if __name__ == '__main__':
     # Home Theater Test Drive
-    amp = Amplifier("Top-O-Line Amplifier")
-    tuner = Tuner("Top-O-Line AM/FM Tuner", amp)
-    dvd = DvdPlayer("Top-O-Line DVD Player", amp)
-    cd = CdPlayer("Top-O-Line CD Player", amp)
-    projector = Projector("Top-O-Line Projector", dvd)
-    lights = TheaterLights("Theater Ceiling Lights")
-    screen = Screen("Theater Screen")
-    popper = PopcornPopper("Popcorn Popper")
+    AMP = Amplifier("Top-O-Line Amplifier")
+    TUNER = Tuner("Top-O-Line AM/FM Tuner", AMP)
+    DVD = DvdPlayer("Top-O-Line DVD Player", AMP)
+    CD = CdPlayer("Top-O-Line CD Player", AMP)
+    PROJECTOR = Projector("Top-O-Line Projector", DVD)
+    LIGHTS = TheaterLights("Theater Ceiling Lights")
+    SCREEN = Screen("Theater Screen")
+    POPPER = PopcornPopper("Popcorn Popper")
 
-    home_theater = HomeTheatherFacade(amp, tuner, dvd, cd, projector, screen,
-                                      lights, popper)
+    HOME_THEATER = HomeTheatherFacade(AMP, TUNER, DVD, CD, PROJECTOR, SCREEN,
+                                      LIGHTS, POPPER)
 
-    home_theater.watch_movie("Raiders of the Lost Ark")
-    home_theater.end_movie()
+    HOME_THEATER.watch_movie("Raiders of the Lost Ark")
+    HOME_THEATER.end_movie()
