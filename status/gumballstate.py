@@ -1,4 +1,10 @@
-import random
+"""
+Gumball machine with State pattern
+
+Author: m1ge7
+Date: 2014/03/30
+"""
+
 from abc import ABCMeta, abstractmethod
 
 
@@ -24,39 +30,35 @@ class State:
 
 class HasQuarterState(State):
 
-    def __init__(self, gumballmachine):
-        self.__gumballmachine = gumballmachine
-    
+    def __init__(self, gumball_machine):
+        self.__gumball_machine = gumball_machine
+
     def insert_quarter(self):
         print "You can't insert another quarter"
 
     def eject_quarter(self):
         print "Quarter returned"
-        self.__gumballmachine.set_state(self.__gumballmachine.get_no_quarter_state())
+        self.__gumball_machine.set_state(self.__gumball_machine.get_no_quarter_state())
 
     def turn_crank(self):
         print "You turned..."
-        winner = random.randint(1,10)
-        if winner == 1 and self.__gumballmachine.get_count() > 1:
-            self.__gumballmachine.set_state(self.__gumballmachine.get_winner_state())
-        else:
-            self.__gumballmachine.set_state(self.__gumballmachine.get_sold_state())
+        self.__gumball_machine.set_state(self.__gumball_machine.get_sold_state())
 
     def dispense(self):
         print "No gumball dispensed"
 
     def __str__(self):
-        return "waiting for turn of crank"
+        return "Waiting for turn of the crank"
 
 
 class NoQuarterState(State):
 
-    def __init__(self, gumballmachine):
-        self.__gumballmachine = gumballmachine
+    def __init__(self, gumball_machine):
+        self.__gumball_machine = gumball_machine
 
     def insert_quarter(self):
         print "You inserted a quarter"
-        self.__gumballmachine.set_state(self.__gumballmachine.get_has_quarter_state())
+        self.__gumball_machine.set_state(self.__gumball_machine.get_has_quarter_state())
 
     def eject_quarter(self):
         print "You haven't inserted a quarter"
@@ -73,8 +75,8 @@ class NoQuarterState(State):
 
 class SoldOutState(State):
 
-    def __init__(self, gumballmachine):
-        self.__gumballmachine = gumballmachine
+    def __init__(self, gumball_machine):
+        self.__gumball_machine = gumball_machine
 
     def insert_quarter(self):
         print "You can't insert a quarter, the machine is sold out"
@@ -94,8 +96,8 @@ class SoldOutState(State):
 
 class SoldState(State):
 
-    def __init__(self, gumballmachine):
-        self.__gumballmachine = gumballmachine
+    def __init__(self, gumball_machine):
+        self.__gumball_machine = gumball_machine
 
     def insert_quarter(self):
         print "Please wait, we're already giving you a gumball"
@@ -107,46 +109,15 @@ class SoldState(State):
         print "Turning twice doesn't get you another gumball!"
 
     def dispense(self):
-        self.__gumballmachine.release_ball()
-        if self.__gumballmachine.get_count() > 0:
-            self.__gumballmachine.set_state(self.__gumballmachine.get_no_quarter_state())
+        self.__gumball_machine.release_ball()
+        if self.__gumball_machine.get_count() > 0:
+            self.__gumball_machine.set_state(self.__gumball_machine.get_no_quarter_state())
         else:
             print "Oops, out of gumballs!"
-            self.__gumballmachine.set_state(self.__gumballmachine.get_sold_out_state())
+            self.__gumball_machine.set_state(self.__gumball_machine.get_sold_out_state())
 
     def __str__(self):
         return "dispensing a gumball"
-
-
-class WinnerState(State):
-
-    def __init__(self, gumballmachine):
-        self.__gumballmachine = gumballmachine
-
-    def insert_quarter(self):
-        print "Please wait, we're already giving you a Gumball"
-
-    def eject_quarter(self):
-        print "Please wait, we're already giving you a Gumball"
-
-    def turn_crank(self):
-        print "Turning again doesn't get you another gumball!"
-
-    def dispense(self):
-        print "YOU'RE A WINNER! You get two gumballs for your quarter"
-        self.__gumballmachine.release_ball()
-        if self.__gumballmachine.get_count() == 0:
-            self.__gumballmachine.set_state(self.__gumballmachine.get_sold_out_state())
-        else:
-            self.__gumballmachine.release_ball()
-            if self.__gumballmachine.get_count() > 0:
-                self.__gumballmachine.set_state(self.__gumballmachine.get_no_quarter_state())
-            else:
-                print "Oops, out of gumballs!"
-                self.__gumballmachine.set_state(self.__gumballmachine.get_sold_out_state())
-
-    def __str__(self):
-        return "despensing two gumballs for your quarter, because YOU'RE A WINNER!" 
 
 
 class GumballMachine:
@@ -156,12 +127,12 @@ class GumballMachine:
         self.__no_quarter_state = NoQuarterState(self)
         self.__has_quarter_state = HasQuarterState(self)
         self.__sold_state = SoldState(self)
-        self.__winner_state = WinnerState(self)
 
-        self.__state = self.__sold_state
         self.__count = number_gumballs
         if number_gumballs > 0:
             self.__state = self.__no_quarter_state
+        else:
+            self.___state = self.__sold_out_state
 
     def insert_quarter(self):
         self.__state.insert_quarter()
@@ -171,12 +142,13 @@ class GumballMachine:
 
     def turn_crank(self):
         self.__state.turn_crank()
+        self.__state.dispense()
 
     def set_state(self, state):
         self.__state = state
 
     def release_ball(self):
-        print "A gumball comes rolling out the slot..." 
+        print "A gumball comes rolling out the slot..."
         if self.__count != 0:
             self.__count -= 1
 
@@ -202,9 +174,6 @@ class GumballMachine:
     def get_sold_state(self):
         return self.__sold_state
 
-    def get_winner_state(self):
-        return self.__winner_state
-
     def __str__(self):
         result = ""
         result += "\nMighty Gumball, Inc."
@@ -216,44 +185,20 @@ class GumballMachine:
         result += "Machine is " + str(self.__state) + "\n"
         return result
 
-    
 
 if __name__ == '__main__':
-    gumballmachine = GumballMachine(10)
+    GUMBALL_MACHINE = GumballMachine(5)
 
-    print(gumballmachine)
+    print GUMBALL_MACHINE
 
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
+    GUMBALL_MACHINE.insert_quarter()
+    GUMBALL_MACHINE.turn_crank()
 
-    print(gumballmachine)
+    print GUMBALL_MACHINE
 
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
+    GUMBALL_MACHINE.insert_quarter()
+    GUMBALL_MACHINE.turn_crank()
+    GUMBALL_MACHINE.insert_quarter()
+    GUMBALL_MACHINE.turn_crank()
 
-    print(gumballmachine)
-
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-
-    print(gumballmachine)
-
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-
-    print(gumballmachine)
-
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-    gumballmachine.insert_quarter()
-    gumballmachine.turn_crank()
-
-    print(gumballmachine)
+    print GUMBALL_MACHINE
