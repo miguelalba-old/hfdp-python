@@ -1,3 +1,11 @@
+"""
+Simple barista
+
+Author: m1ge7
+Date: 2014/03/30
+"""
+
+
 class Coffee:
 
     def prepare_recipe(self):
