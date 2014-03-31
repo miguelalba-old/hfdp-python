@@ -15,4 +15,6 @@ So far, I've got covered the following patterns:
 * Adapter
 * Facade
 * Template method
+* Composite
 * Status pattern
+* Combining patterns

@@ -1,4 +1,11 @@
-from abc import ABCMeta, abstractmethod
+"""
+Menus with composite pattern
+
+Author: m1ge7
+Date: 2014/3/30
+"""
+
+from abc import ABCMeta
 
 
 class MenuComponent:
@@ -11,6 +18,9 @@ class MenuComponent:
         raise NotImplementedError()
 
     def get_child(self, i):
+        raise NotImplementedError()
+
+    def get_name(self):
         raise NotImplementedError()
 
     def get_description(self):
@@ -36,6 +46,9 @@ class MenuItem(MenuComponent):
 
     def get_name(self):
         return self.__name
+
+    def get_description(self):
+        return self.__description
 
     def get_price(self):
         return self.__price
